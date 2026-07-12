@@ -2,7 +2,7 @@ site_name: DevOps intro
 site_url: https://devops.2mohsen.ir/
 site_description: DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems.
 site_author: Mohammad Mohammadian
-repo_url: https://github.com/mammadnet/devops-intro
+repo_url: https://github.com/2mohsen/devops-intro
 nav:
   - home: index.md
   - مطالب:
@@ -44,12 +44,12 @@ markdown_extensions:
 extra:
   social:
     - icon: simple/github 
-      link: https://github.com/mammadnet
+      link: https://github.com/2mohsen
     - icon: fontawesome/brands/linkedin-in
       link: https://www.linkedin.com/in/mohamadiann/
     - icon: material/web
-      link: https://mamadnet.ir/
+      link: https://2mohsen.ir/
 
   generator: false
 
-copyright: Just For Fun !!!
+copyright: Just For Fun
