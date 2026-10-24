@@ -16,6 +16,12 @@ nav:
     - CI/CD server: CI_CD_server.md
     - Monitoring and loging tool: monitoring_tools.md
     - cloud computing and DevOps: cloud_computing.md
+  - پروژه پایانی: 
+    - مقدمه: introduction.md
+    - زیرساخت و نحوه استقرار: part01.md
+    - بررسی معماری داخلی برنامه: part02.md
+    - ارتباط دو مخزن: part03.md
+    - جمعبندی نهایی: part04.md
   - درباره: about.md
 
 theme:
