@@ -1,0 +1,1692 @@
+
+<!doctype html>
+<html lang="fa" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems.">
+      
+      
+        <meta name="author" content="Mohammad Mohammadian">
+      
+      
+        <link rel="canonical" href="https://devops.2mohsen.ir/part01/">
+      
+      
+        <link rel="prev" href="../introduction/">
+      
+      
+        <link rel="next" href="../part02/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>زیرساخت و نحوه استقرار - DevOps intro</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="زیرساخت و نحوه استقرار - DevOps intro" />
+<meta property="og:description" content="DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems." />
+<meta property="og:image" content="https://devops.2mohsen.ir/assets/images/social/part01.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://devops.2mohsen.ir/part01/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="زیرساخت و نحوه استقرار - DevOps intro" />
+<meta property="twitter:description" content="DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems." />
+<meta property="twitter:image" content="https://devops.2mohsen.ir/assets/images/social/part01.png" />
+</head>
+  
+  
+    <body dir="rtl">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          پرش به محتویات
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="سرتیتر">
+    <a href=".." title="DevOps intro" class="md-header__button md-logo" aria-label="DevOps intro" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevOps intro
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              زیرساخت و نحوه استقرار
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/2mohsen/devops-intro" title="رفتن به مخزن" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="زبانه‌ها" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../befor_devops/" class="md-tabs__link">
+          
+  
+  
+  مطالب
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
+          
+  
+  
+  پروژه پایانی
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  درباره
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="هدایت" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DevOps intro" class="md-nav__button md-logo" aria-label="DevOps intro" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    DevOps intro
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/2mohsen/devops-intro" title="رفتن به مخزن" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مطالب
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    مطالب
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../befor_devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    دنیای قبل devops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devops_evolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ظهور devops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devops_concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مفاهیم devops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containerization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containerization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../orchestration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Infrastructure_as_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vcs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    version control system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CI_CD_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring and loging tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_computing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cloud computing and DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    پروژه پایانی
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    پروژه پایانی
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مقدمه
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    زیرساخت و نحوه استقرار
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    زیرساخت و نحوه استقرار
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="فهرست موضوعات">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      فهرست موضوعات
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۱. معرفی مخزن و هدف آن
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲. ساختار کلی مخزن زیرساخت
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۳. مفهوم کانتینر سازی و نقش Docker در پروژه
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۴. نقش Docker Compose در هماهنگی سرویس‌ها
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۵. بررسی ارتباط کانتینرهای پروژه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۵. بررسی ارتباط کانتینرهای پروژه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۵.۱. نمودار معماری کانتینرها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۵.۲. چرا سرویس‌ها در کانتینرهای جداگانه قرار گرفته‌اند؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶. Traefik و نقش آن در دریافت درخواست‌های کاربران
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۶. Traefik و نقش آن در دریافت درخواست‌های کاربران">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶.۱. پراکسی معکوس چگونه کار می‌کند؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traefik_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶.۲. چرا از Traefik استفاده شده است؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#https-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶.۳. نقش HTTPS و گواهی TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nexus-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۷. Nexus و مدیریت تصاویر Docker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۷. Nexus و مدیریت تصاویر Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۷.۱. چرا به مخزن خصوصی تصاویر نیاز داریم؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۸. PostgreSQL؛ پایگاه داده اصلی برنامه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۸. PostgreSQL؛ پایگاه داده اصلی برنامه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۸.۱. اهمیت Volume در نگهداری اطلاعات
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۹. Redis و کاربرد آن در زیرساخت
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۹.۱. چرا از کش استفاده می‌کنیم؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../part02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    بررسی معماری داخلی برنامه
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../part03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ارتباط دو مخزن
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../part04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    جمعبندی نهایی
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    درباره
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="فهرست موضوعات">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      فهرست موضوعات
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۱. معرفی مخزن و هدف آن
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲. ساختار کلی مخزن زیرساخت
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۳. مفهوم کانتینر سازی و نقش Docker در پروژه
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۴. نقش Docker Compose در هماهنگی سرویس‌ها
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۵. بررسی ارتباط کانتینرهای پروژه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۵. بررسی ارتباط کانتینرهای پروژه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۵.۱. نمودار معماری کانتینرها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۵.۲. چرا سرویس‌ها در کانتینرهای جداگانه قرار گرفته‌اند؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶. Traefik و نقش آن در دریافت درخواست‌های کاربران
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۶. Traefik و نقش آن در دریافت درخواست‌های کاربران">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶.۱. پراکسی معکوس چگونه کار می‌کند؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traefik_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶.۲. چرا از Traefik استفاده شده است؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#https-tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۶.۳. نقش HTTPS و گواهی TLS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nexus-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۷. Nexus و مدیریت تصاویر Docker
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۷. Nexus و مدیریت تصاویر Docker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۷.۱. چرا به مخزن خصوصی تصاویر نیاز داریم؟
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۸. PostgreSQL؛ پایگاه داده اصلی برنامه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۸. PostgreSQL؛ پایگاه داده اصلی برنامه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۸.۱. اهمیت Volume در نگهداری اطلاعات
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۹. Redis و کاربرد آن در زیرساخت
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۹.۱. چرا از کش استفاده می‌کنیم؟
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="_1">بخش اول: بررسی زیرساخت و نحوه استقرار برنامه</h1>
+<h2 id="_2"><strong>۱. معرفی مخزن و هدف آن</strong></h2>
+<p>این بخش برای فراهم کردن زیرساخت لازم جهت اجرای برنامه شبکه اجتماعی طراحی شده است. در یک پروژه نرم‌افزاری، آماده بودن کد برنامه به‌تنهایی برای ارائه یک سرویس قابل استفاده کافی نیست. برنامه باید روی سرور اجرا شود، به پایگاه داده دسترسی داشته باشد، درخواست‌های کاربران را دریافت کند و سرویس‌های مورد نیاز خود را در اختیار داشته باشد.</p>
+<p>علاوه بر این، مدیریت دسترسی کاربران، پیکربندی ارتباطات شبکه، نگهداری اطلاعات پس از راه‌اندازی مجدد کانتینرها و مدیریت تصاویر Docker نیز از مسائل مهم در زمان استقرار هستند.</p>
+<p>این مخزن با استفاده از فناوری‌هایی مانند Docker، Docker Compose، Traefik و Nexus، بخش مهمی از این نیازها را پوشش می‌دهد.</p>
+<p>بر اساس ساختار بررسی‌شده این پروژه، اجزای اصلی زیرساخت عبارت‌اند از:</p>
+<ul>
+<li><strong>Docker:</strong> اجرای برنامه‌ها و سرویس‌ها در محیط‌های ایزوله.  </li>
+<li><strong>Docker Compose:</strong> تعریف سرویس‌ها، شبکه‌ها، متغیرهای محیطی و فضای ذخیره‌سازی مورد نیاز.  </li>
+<li><strong>Traefik:</strong> دریافت درخواست‌های ورودی و هدایت آن‌ها به سرویس مناسب.  </li>
+<li><strong>Nexus:</strong> میزبانی مخزن خصوصی تصاویر کانتینری.  </li>
+<li><strong>Django و Gunicorn:</strong> اجرای برنامه وب و پاسخ‌گویی به درخواست‌ها.  </li>
+<li><strong>PostgreSQL:</strong> ذخیره اطلاعات اصلی برنامه.  </li>
+<li><strong>Redis:</strong> فراهم کردن حافظه سریع برای داده‌های موقت و کش.  </li>
+<li><strong>RabbitMQ:</strong> فراهم کردن زیرساخت صف پیام برای ارتباطات ناهم‌زمان.</li>
+</ul>
+<p><em>نکته مهم این است که وجود تنظیمات یک سرویس در فایل‌های پروژه لزوماً به معنای فعال بودن تمام قابلیت‌های آن در زمان اجرا نیست. به همین دلیل، در این گزارش میان سرویس‌های تعریف‌شده در پیکربندی و قابلیت‌هایی که واقعاً در مسیر اجرای برنامه استفاده می‌شوند، تفاوت قائل می‌شویم.</em></p>
+<h2 id="_3"><strong>۲. ساختار کلی مخزن زیرساخت</strong></h2>
+<p>در سطح اصلی مخزن، بخش‌هایی با مسئولیت‌های متفاوت وجود دارند:</p>
+<table>
+<thead>
+<tr>
+<th>مسئولیت</th>
+<th>بخش</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>فایل‌ها و تنظیمات مربوط به استقرار برنامه</td>
+<td>application/</td>
+</tr>
+<tr>
+<td>تنظیمات مرتبط با سرویس Nexus</td>
+<td>nexus/</td>
+</tr>
+<tr>
+<td>تنظیمات مربوط به پروکسی و مسیریابی درخواست‌ها</td>
+<td>traefik/</td>
+</tr>
+<tr>
+<td>تعریف سرویس‌ها و ارتباطات زیرساختی</td>
+<td>compose.yml</td>
+</tr>
+<tr>
+<td>اسکریپت مرتبط با سخت‌سازی امنیتی محیط سرور</td>
+<td>hardening.sh</td>
+</tr>
+</tbody>
+</table>
+<p>فایل compose.yml یکی از مهم‌ترین قسمت‌های این مخزن است؛ زیرا اجزای اصلی زیرساخت و نحوه ارتباط آن‌ها را در یک ساختار مشخص تعریف می‌کند. <br />
+با استفاده از Docker Compose می‌توان سرویس‌های مختلف را به‌صورت هماهنگ راه‌اندازی کرد، شبکه مشترک آن‌ها را مشخص کرد و برای داده‌های ماندگار، فضای ذخیره‌سازی تعریف کرد.</p>
+<p>البته جزئیات دقیق اجرای هر سرویس به تنظیمات همان سرویس، فایل‌های وابسته، متغیرهای محیطی و نسخه ایمیج های Docker نیز بستگی دارد.</p>
+<h2 id="docker"><strong>۳. مفهوم کانتینر سازی و نقش Docker در پروژه</strong></h2>
+<p>برای درک نحوه استقرار این پروژه، ابتدا باید با مفهوم کانتینر سازی آشنا شویم.</p>
+<p>کانتینر محیطی ایزوله برای اجرای یک برنامه است که کد برنامه، وابستگی‌های مورد نیاز و تنظیمات اجرایی آن را در کنار هم قرار می‌دهد. با این روش، برنامه می‌تواند در محیط‌های مختلف با رفتار قابل پیش‌بینی‌تری اجرا شود.</p>
+<p>برای مثال، در این پروژه پایگاه داده PostgreSQL و برنامه Django به‌صورت دو سرویس مستقل اجرا می‌شوند. در نتیجه، هر کدام محیط اجرایی و تنظیمات مخصوص خود را دارند، اما از طریق شبکه Docker با یکدیگر ارتباط برقرار می‌کنند.</p>
+<p>این روش چند مزیت مهم دارد:</p>
+<ul>
+<li><strong>جداسازی سرویس‌ها:</strong> خطا یا تغییرات یک سرویس لزوماً به تغییر مستقیم سرویس دیگر نیاز ندارد.  </li>
+<li><strong>مدیریت آسان‌تر:</strong> می‌توان سرویس‌ها را به‌صورت مستقل راه‌اندازی، متوقف و بررسی کرد.  </li>
+<li><strong>قابلیت تکرار استقرار:</strong> با استفاده از فایل‌های پیکربندی، می‌توان محیط اجرای پروژه را با تنظیمات مشابه دوباره ایجاد کرد.  </li>
+<li><strong>مدیریت وابستگی‌ها:</strong> هر سرویس وابستگی‌های اجرایی خودش را دارد.  </li>
+<li><strong>استفاده بهتر از منابع:</strong> چند سرویس می‌توانند روی یک سرور اجرا شوند، بدون اینکه لازم باشد برای هر سرویس یک ماشین مجازی مستقل ایجاد شود.</li>
+</ul>
+<p>البته کانتینر با ماشین مجازی تفاوت دارد. کانتینرها معمولاً هسته سیستم‌عامل میزبان را به اشتراک می‌گذارند؛ درحالی‌که ماشین‌های مجازی سیستم‌عامل مستقل خود را اجرا می‌کنند.</p>
+<h2 id="_4"></h2>
+<h2 id="docker-compose"><strong>۴. نقش Docker Compose در هماهنگی سرویس‌ها</strong></h2>
+<p>Docker Compose ابزاری برای تعریف و مدیریت چند سرویس مرتبط با یکدیگر است.<br />
+در یک پروژه واقعی، اجرای جداگانه هر سرویس می‌تواند پیچیده و مستعد خطا باشد. برای مثال، ممکن است لازم باشد ابتدا پایگاه داده راه‌اندازی شود، سپس برنامه وب اجرا شود و بعد از آن تنظیمات شبکه و دسترسی به سرویس‌های دیگر بررسی شوند.<br />
+Docker Compose این اطلاعات را در یک فایل پیکربندی، مانند compose.yml، گردآوری می‌کند.</p>
+<p>در این فایل می‌توان موارد زیر را تعریف کرد:</p>
+<ul>
+<li>تصویر یا روش ساخت هر سرویس؛  </li>
+<li>نام سرویس‌ها؛  </li>
+<li>متغیرهای محیطی؛  </li>
+<li>شبکه‌های ارتباطی؛  </li>
+<li>فضای ذخیره‌سازی ماندگار؛  </li>
+<li>پورت‌های باز شده روی سرور؛  </li>
+<li>برچسب‌های موردنیاز Traefik؛  </li>
+<li>وابستگی‌های اجرایی میان سرویس‌ها.</li>
+</ul>
+<p>بنابراین، فایل Compose را می‌توان نقشه اجرایی زیرساخت پروژه دانست.<br />
+برای مثال، اگر برنامه Django به پایگاه داده‌ای با نام سرویس db متصل شود، معمولاً می‌توان نام میزبان پایگاه داده را در تنظیمات اتصال به شکل زیر قرار داد:<br />
+<em>Db:5432</em></p>
+<p>در این آدرس، db نام سرویس در شبکه Docker و 5432 پورت پیش‌فرض PostgreSQL است.</p>
+<h2 id="_5"><strong>۵. بررسی ارتباط کانتینرهای پروژه</strong></h2>
+<p>یکی از مهم‌ترین قسمت‌های این زیرساخت، ارتباط میان سرویس‌های مختلف است.<br />
+در این پروژه، شبکه‌ای با نام <strong>web_net</strong> برای ارتباط سرویس‌ها در نظر گرفته شده است. این شبکه امکان برقراری ارتباط میان کانتینرهای متصل به آن را فراهم می‌کند.<br />
+وجود شبکه مشترک به این معنی نیست که تمام سرویس‌ها باید مستقیماً در معرض اینترنت باشند. سرویس‌ها می‌توانند در شبکه داخلی با یکدیگر ارتباط برقرار کنند، درحالی‌که فقط پورت‌های ضروری روی سرور منتشر می‌شوند.</p>
+<h3 id="_6"><strong><em>۵.۱. نمودار معماری کانتینرها</em></strong></h3>
+<p>این نمودار، رابطه منطقی اجزای زیرساخت را نشان می‌دهد؛<br />
+<img alt="CI CD pipeline" src="../media/docker_architecture.png" />
+برای مثال، درخواست معمول ورود کاربر به شبکه اجتماعی از Traefik به Django می‌رسد و برای بررسی اطلاعات کاربر، Django با PostgreSQL ارتباط برقرار می‌کند. در چنین درخواستی، نیازی نیست RabbitMQ حتماً درگیر شود.<br />
+همچنین  Nexus یا docker registry بخشی از مسیر معمول پردازش درخواست کاربران نیست. نقش آن بیشتر به مدیریت و توزیع تصاویر کانتینری در فرایند استقرار مربوط می‌شود.</p>
+<h3 id="_7"><strong><em>۵.۲. چرا سرویس‌ها در کانتینرهای جداگانه قرار گرفته‌اند؟</em></strong></h3>
+<p>جداسازی سرویس‌ها باعث می‌شود هر جزء وظیفه مشخصی داشته باشد.<br />
+برای مثال، PostgreSQL مسئول نگهداری داده‌هاست، Redis برای دسترسی سریع به داده‌ها استفاده می‌شود و Traefik درخواست‌های ورودی را مدیریت می‌کند.<br />
+این جداسازی چند مزیت دارد:</p>
+<ol>
+<li>تغییر نسخه Redis لزوماً به تغییر مستقیم نسخه PostgreSQL نیاز ندارد.  </li>
+<li>می‌توان لاگ هر سرویس را به‌صورت جداگانه بررسی کرد.  </li>
+<li>در صورت بروز مشکل، یافتن منشا خطا آسان‌تر می‌شود.  </li>
+<li>امکان تنظیم منابع و سیاست‌های اجرایی هر سرویس به‌صورت مستقل فراهم می‌شود.  </li>
+<li>می‌توان هر سرویس را با توجه به نیازهای همان بخش نگهداری و به‌روزرسانی کرد.</li>
+</ol>
+<p>بااین‌حال، جداسازی کانتینرها به‌خودی‌خود باعث مقیاس‌پذیری کامل یا دسترس‌پذیری بالا نمی‌شود. این قابلیت‌ها به تنظیمات تکمیلی، مدیریت داده‌ها، سلامت سرویس‌ها و نحوه استقرار نیز وابسته‌اند.</p>
+<h2 id="_8"></h2>
+<h2 id="traefik"><strong>۶. Traefik و نقش آن در دریافت درخواست‌های کاربران</strong></h2>
+<p>Traefik یکی از اجزای کلیدی این زیرساخت است.<br />
+Traefik یک Reverse Proxy یا پروکسی معکوس است. پراکسی معکوس درخواست کاربران را دریافت می‌کند و بر اساس قواعد تعریف‌شده، آن‌ها را به سرویس مقصد هدایت می‌کند.<br />
+در این پروژه، Traefik در نقطه ورودی زیرساخت قرار دارد و ارتباط میان کاربران و سرویس‌های داخلی را مدیریت می‌کند.</p>
+<h3 id="_9"><strong><em>۶.۱. پراکسی معکوس چگونه کار می‌کند؟</em></strong></h3>
+<p>فرض کنیم کاربری آدرس دامنه برنامه را در مرورگر خود وارد می‌کند.<br />
+در یک استقرار متداول با Traefik، فرایند به شکل زیر انجام می‌شود:<br />
+۱. مرورگر کاربر به دامنه برنامه متصل می‌شود.<br />
+۲. درخواست به سرور میزبان می‌رسد.<br />
+۳. Traefik درخواست را دریافت می‌کند.<br />
+۴. Traefik با بررسی اطلاعات درخواست، مانند نام میزبان، تشخیص می‌دهد که درخواست به کدام سرویس تعلق دارد.<br />
+۵. درخواست به کانتینر برنامه Django منتقل می‌شود.<br />
+۶. Django درخواست را پردازش می‌کند و پاسخ را به Traefik بازمی‌گرداند.<br />
+۷. Traefik پاسخ را به کاربر ارسال می‌کند.</p>
+<h3 id="traefik_1"><strong><em>۶.۲. چرا از Traefik استفاده شده است؟</em></strong></h3>
+<p>استفاده از Traefik مزایای زیر را فراهم می‌کند:</p>
+<ul>
+<li>مدیریت متمرکز درخواست‌های ورودی؛  </li>
+<li>مسیریابی درخواست‌ها بر اساس دامنه و قواعد تعریف‌شده؛  </li>
+<li>امکان استفاده از HTTPS و مدیریت گواهی‌های TLS؛  </li>
+<li>امکان هدایت درخواست‌ها به چند سرویس مختلف؛  </li>
+<li>کاهش نیاز به تعریف دستی مسیرها در یک پراکسی ثابت؛  </li>
+<li>امکان توسعه زیرساخت و افزودن سرویس‌های جدید.</li>
+</ul>
+<p>Traefik می‌تواند از طریق Docker Provider اطلاعات کانتینرها و برچسب‌های آن‌ها را دریافت کند و بر اساس این اطلاعات، قواعد مسیریابی را ایجاد کند.</p>
+<h3 id="https-tls"><strong><em>۶.۳. نقش HTTPS و گواهی TLS</em></strong></h3>
+<p>ارتباط HTTPS باعث می‌شود داده‌های مبادله‌شده میان مرورگر و نقطه ورودی سرور، در مسیر انتقال رمزنگاری شوند.<br />
+در این معماری، Traefik می‌تواند مسئول دریافت ارتباط HTTPS و مدیریت گواهی TLS باشد. این فرایند معمولاً با عنوان TLS Termination شناخته می‌شود.<br />
+پس از برقراری ارتباط امن با Traefik، درخواست می‌تواند از طریق شبکه داخلی به برنامه Django منتقل شود.<br />
+البته امن بودن ارتباط داخلی نیز به نحوه پیکربندی شبکه و سیاست‌های امنیتی بستگی دارد. استفاده از HTTPS در نقطه ورودی، به‌تنهایی به معنی رمزنگاری تمام ارتباطات داخلی نیست.<br />
+همچنین فعال بودن HTTPS به تنظیم صحیح DNS، دسترسی به پورت‌های لازم، معتبر بودن گواهی و هماهنگی تنظیمات Traefik وابسته است.</p>
+<h2 id="nexus-docker"><strong>۷. Nexus و مدیریت تصاویر Docker</strong></h2>
+<p>سرویس مهم دیگر در این زیرساخت، Nexus است.<br />
+Nexus Repository Manager برای مدیریت و میزبانی انواع مخازن نرم‌افزاری استفاده می‌شود. در این پروژه، نقش مورد نظر آن میزبانی مخزن خصوصی تصاویر Docker است.</p>
+<h3 id="_10"><strong><em>۷.۱. چرا به مخزن خصوصی تصاویر نیاز داریم؟</em></strong></h3>
+<p>تصاویر Docker معمولاً از مخازن عمومی دریافت می‌شوند. بااین‌حال، در پروژه‌های سازمانی یا پروژه‌هایی که نیاز به کنترل بیشتر دارند، ممکن است لازم باشد تصاویر اختصاصی برنامه در یک مخزن خصوصی نگهداری شوند.<br />
+برای مثال، تصویر ساخته‌شده از برنامه Django می‌تواند در Nexus ذخیره شود تا سرور هنگام استقرار آن را از همان مخزن دریافت کند.<br />
+این روش امکان مدیریت متمرکز تصاویر را فراهم می‌کند و به تیم توسعه اجازه می‌دهد نسخه‌های مختلف برنامه را در یک مخزن مشخص نگهداری کند.</p>
+<h2 id="postgresql"><strong>۸. PostgreSQL؛ پایگاه داده اصلی برنامه</strong></h2>
+<p>PostgreSQL پایگاه داده رابطه‌ای مورد استفاده برنامه است.<br />
+یک شبکه اجتماعی باید اطلاعاتی مانند کاربران، مشخصات حساب‌ها، نوشته‌ها و ارتباط میان کاربران را نگهداری کند. این اطلاعات ساختارمند هستند و به روابط میان موجودیت‌های مختلف نیاز دارند؛ به همین دلیل، پایگاه داده رابطه‌ای گزینه مناسبی برای آن‌هاست.<br />
+در این پروژه، Django از طریق ORM خود با PostgreSQL ارتباط برقرار می‌کند.<br />
+ORM مخفف Object-Relational Mapping است. این فناوری امکان تعامل با پایگاه داده را از طریق مدل‌ها و اشیای زبان برنامه‌نویسی فراهم می‌کند.<br />
+برای مثال، به‌جای نوشتن مستقیم تمام دستورات SQL، برنامه‌نویس می‌تواند از مدل Django برای ایجاد یا بازیابی اطلاعات استفاده کند.</p>
+<p>روند کلی به شکل زیر است:</p>
+<p><img alt="CI CD pipeline" src="../media/request_struct.png" /></p>
+<p>پایگاه داده در این معماری یک سرویس مستقل است؛ بنابراین، برنامه Django به‌جای نگهداری داده‌ها در حافظه داخلی خود، آن‌ها را در سرویس PostgreSQL ذخیره می‌کند.</p>
+<h3 id="volume"><strong><em>۸.۱. اهمیت Volume در نگهداری اطلاعات</em></strong></h3>
+<p>کانتینرها می‌توانند متوقف یا حذف شوند و دوباره ساخته شوند. اگر داده‌های مهم فقط در لایه قابل‌حذف کانتینر نگهداری شوند، امکان از دست رفتن آن‌ها وجود دارد.<br />
+برای جلوگیری از این مشکل، Docker امکان استفاده از Volume را فراهم می‌کند.<br />
+در پروژه، تعریف فضای ذخیره‌سازی ماندگار برای داده‌های PostgreSQL اهمیت زیادی دارد؛ زیرا اطلاعات کاربران و نوشته‌ها نباید با بازسازی کانتینر پایگاه داده از بین بروند.<br />
+البته Volume جایگزین پشتیبان‌گیری نیست. برای حفاظت مناسب از اطلاعات، باید نسخه پشتیبان تهیه شود و امکان بازیابی آن نیز آزمایش شود.</p>
+<h2 id="redis"><strong>۹. Redis و کاربرد آن در زیرساخت</strong></h2>
+<p>Redis یک سامانه ذخیره‌سازی داده در حافظه است که معمولاً برای کش، داده‌های موقت و برخی کاربردهای پردازش سریع استفاده می‌شود. در معماری این پروژه، Redis در کنار PostgreSQL قرار دارد، اما وظیفه آن با پایگاه داده اصلی متفاوت است.PostgreSQL  برای نگهداری پایدار اطلاعات اصلی برنامه استفاده می‌شود، درحالی‌که Redis می‌تواند برای نگهداری موقت نتایج یا داده‌هایی که دسترسی سریع به آن‌ها اهمیت دارد، مورد استفاده قرار گیرد.</p>
+<h2 id="_11"><strong>۹.۱. چرا از کش استفاده می‌کنیم؟</strong></h2>
+<p>فرض کنیم اطلاعات مشخصات یک کاربر بارها درخواست می‌شود. اگر هر بار برنامه تمام اطلاعات را از پایگاه داده بخواند، تعداد درخواست‌های تکراری به PostgreSQL افزایش پیدا می‌کند.<br />
+در صورت استفاده از کش، برنامه می‌تواند نتیجه برخی عملیات را در Redis نگهداری کند و در درخواست‌های بعدی، در صورت معتبر بودن داده کش‌شده، آن را سریع‌تر در اختیار درخواست قرار دهد.</p>
+<h1 id="_12"></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Just For Fun
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/2mohsen" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/mohamadiann/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8c0-14.3 5.7-27.9 15.8-38S39.6 0 53.8 0s27.9 5.7 38 15.8 15.8 23.8 15.8 38c0 29.7-24.1 54.3-53.8 54.3M447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://2mohsen.ir/" target="_blank" rel="noopener" title="2mohsen.ir" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u06a9\u067e\u06cc \u0634\u062f", "clipboard.copy": "\u06a9\u067e\u06cc \u06a9\u0631\u062f\u0646", "search.result.more.one": "1 \u0645\u0648\u0631\u062f \u062f\u06cc\u06af\u0631 \u062f\u0631 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647", "search.result.more.other": "# \u0645\u0648\u0631\u062f \u062f\u06cc\u06af\u0631 \u062f\u0631 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647", "search.result.none": "\u0633\u0646\u062f\u06cc \u06cc\u0627\u0641\u062a \u0646\u0634\u062f", "search.result.one": "1 \u0633\u0646\u062f \u06cc\u0627\u0641\u062a \u0634\u062f", "search.result.other": "# \u0633\u0646\u062f \u06cc\u0627\u0641\u062a \u0634\u062f", "search.result.placeholder": "\u0628\u0631\u0627\u06cc \u0634\u0631\u0648\u0639 \u062c\u0633\u062a\u062c\u0648 \u062a\u0627\u06cc\u067e \u06a9\u0646\u06cc\u062f", "search.result.term.missing": "\u0645\u0648\u062c\u0648\u062f \u0646\u06cc\u0633\u062a", "select.version": "\u0627\u0646\u062a\u062e\u0627\u0628 \u0648\u06cc\u0631\u0627\u06cc\u0634"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1550 @@
+
+<!doctype html>
+<html lang="fa" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems.">
+      
+      
+        <meta name="author" content="Mohammad Mohammadian">
+      
+      
+        <link rel="canonical" href="https://devops.2mohsen.ir/part02/">
+      
+      
+        <link rel="prev" href="../part01/">
+      
+      
+        <link rel="next" href="../part03/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>بررسی معماری داخلی برنامه - DevOps intro</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="بررسی معماری داخلی برنامه - DevOps intro" />
+<meta property="og:description" content="DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems." />
+<meta property="og:image" content="https://devops.2mohsen.ir/assets/images/social/part02.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://devops.2mohsen.ir/part02/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="بررسی معماری داخلی برنامه - DevOps intro" />
+<meta property="twitter:description" content="DevOps Intro — Practical, hands-on guides for CI/CD, Docker, Kubernetes, automation and monitoring to build reliable, scalable production systems." />
+<meta property="twitter:image" content="https://devops.2mohsen.ir/assets/images/social/part02.png" />
+</head>
+  
+  
+    <body dir="rtl">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#app-devops-project" class="md-skip">
+          پرش به محتویات
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="سرتیتر">
+    <a href=".." title="DevOps intro" class="md-header__button md-logo" aria-label="DevOps intro" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevOps intro
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              بررسی معماری داخلی برنامه
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/2mohsen/devops-intro" title="رفتن به مخزن" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="زبانه‌ها" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../befor_devops/" class="md-tabs__link">
+          
+  
+  
+  مطالب
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../introduction/" class="md-tabs__link">
+          
+  
+  
+  پروژه پایانی
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  درباره
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="هدایت" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DevOps intro" class="md-nav__button md-logo" aria-label="DevOps intro" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    DevOps intro
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/2mohsen/devops-intro" title="رفتن به مخزن" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مطالب
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    مطالب
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../befor_devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    دنیای قبل devops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devops_evolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ظهور devops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../devops_concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مفاهیم devops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containerization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containerization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../orchestration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Infrastructure_as_code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IaC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vcs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    version control system
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CI_CD_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring and loging tool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud_computing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cloud computing and DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    پروژه پایانی
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    پروژه پایانی
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    مقدمه
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../part01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    زیرساخت و نحوه استقرار
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    بررسی معماری داخلی برنامه
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    بررسی معماری داخلی برنامه
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="فهرست موضوعات">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      فهرست موضوعات
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۱. معرفی برنامه شبکه اجتماعی
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#django-django-rest-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲. تفاوت Django و Django REST Framework در این پروژه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۲. تفاوت Django و Django REST Framework در این پروژه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#url-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۱. URL Routing؛ مسیریابی درخواست‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۲. View؛ دریافت و پاسخ‌گویی به درخواست
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۳. Serializer؛ اعتبارسنجی و تبدیل داده‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۴. Service؛ اجرای منطق کاربردی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۵. Selector؛ سازمان‌دهی عملیات خواندن اطلاعات
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۶. Model؛ تعریف ساختار داده‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۳. چرخه پردازش یک درخواست در برنامه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۳. چرخه پردازش یک درخواست در برنامه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله اول: ارسال درخواست
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله دوم: دریافت درخواست در سرور
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله سوم: مسیریابی در Django
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله چهارم: بررسی ورودی و دسترسی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله پنجم: اجرای منطق برنامه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله ششم: بازیابی داده
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله هفتم: آماده‌سازی پاسخ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله هشتم: ارسال پاسخ
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../part03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ارتباط دو مخزن
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../part04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    جمعبندی نهایی
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    درباره
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="فهرست موضوعات">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      فهرست موضوعات
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۱. معرفی برنامه شبکه اجتماعی
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#django-django-rest-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲. تفاوت Django و Django REST Framework در این پروژه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۲. تفاوت Django و Django REST Framework در این پروژه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#url-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۱. URL Routing؛ مسیریابی درخواست‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۲. View؛ دریافت و پاسخ‌گویی به درخواست
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۳. Serializer؛ اعتبارسنجی و تبدیل داده‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۴. Service؛ اجرای منطق کاربردی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۵. Selector؛ سازمان‌دهی عملیات خواندن اطلاعات
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۲.۶. Model؛ تعریف ساختار داده‌ها
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ۳. چرخه پردازش یک درخواست در برنامه
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="۳. چرخه پردازش یک درخواست در برنامه">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله اول: ارسال درخواست
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله دوم: دریافت درخواست در سرور
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله سوم: مسیریابی در Django
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله چهارم: بررسی ورودی و دسترسی
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله پنجم: اجرای منطق برنامه
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله ششم: بازیابی داده
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله هفتم: آماده‌سازی پاسخ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        مرحله هشتم: ارسال پاسخ
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="app-devops-project">بخش دوم: بررسی معماری داخلی برنامه در مخزن app-devops-project</h1>
+<h2 id="_1"><strong>۱. معرفی برنامه شبکه اجتماعی</strong></h2>
+<p>مخزن app-devops-project شامل کدهای برنامه اصلی است. این برنامه با استفاده از Django توسعه داده شده و قابلیت‌های پایه یک شبکه اجتماعی ساده را فراهم می‌کند.<br />
+در یک شبکه اجتماعی، کاربران باید بتوانند حساب کاربری داشته باشند، وارد سیستم شوند، اطلاعات خود را مدیریت کنند و با محتوای منتشر شده توسط دیگران تعامل داشته باشند.<br />
+برای پیاده‌سازی چنین برنامه‌ای، صرفاً ایجاد چند صفحه یا تعریف چند مدل کافی نیست. برنامه باید بتواند درخواست‌های کاربران را دریافت کند، اطلاعات ورودی را اعتبارسنجی کند، مجوزهای لازم را بررسی کند، منطق مربوط به عملیات را اجرا کند و در نهایت پاسخ مناسبی برگرداند.<br />
+در این پروژه، معماری برنامه به‌گونه‌ای طراحی شده است که مسئولیت‌های مختلف در بخش‌های مجزا قرار بگیرند. این موضوع به خوانایی کد، نگهداری بهتر و توسعه قابلیت‌های جدید کمک می‌کند.<br />
+از اجزای مهم معماری برنامه می‌توان به موارد زیر اشاره کرد:</p>
+<ul>
+<li>Django به‌عنوان چارچوب اصلی توسعه برنامه؛  </li>
+<li>Django REST Framework برای پیاده‌سازی API ها؛  </li>
+<li>مدل‌های Django برای تعریف ساختار داده‌ها؛  </li>
+<li>Serializer ها برای اعتبارسنجی و تبدیل داده‌ها؛  </li>
+<li>View ها برای دریافت درخواست و تولید پاسخ؛  </li>
+<li>Service ها برای اجرای عملیات و منطق کاربردی؛  </li>
+<li>Selector ها برای عملیات خواندن و بازیابی اطلاعات؛  </li>
+<li>PostgreSQL برای ذخیره‌سازی پایدار داده‌ها؛  </li>
+<li>Redis برای کش اطلاعات منتخب؛  </li>
+<li>JWT برای احراز هویت مبتنی بر توکن.</li>
+</ul>
+<p>این اجزا با یکدیگر همکاری می‌کنند تا درخواست کاربر به یک عملیات مشخص در برنامه تبدیل شود.</p>
+<h2 id="django-django-rest-framework"><strong>۲. تفاوت Django و Django REST Framework در این پروژه</strong></h2>
+<p>برای فهم ساختار کد باید تفاوت Django و Django REST Framework را بدانیم.<br />
+Django چارچوب اصلی برنامه است و امکاناتی مانند مدل‌ها، ORM، مسیریابی URL، تنظیمات، مدیریت کاربران و ابزارهای توسعه وب را فراهم می‌کند. در مقابل، Django REST Framework مجموعه‌ای از ابزارها برای ساخت API های مبتنی بر REST است. API رابطی است که امکان ارتباط برنامه‌های مختلف را با یکدیگر فراهم می‌کند.<br />
+در این پروژه، API ها به کلاینت اجازه می‌دهند درخواست‌هایی مانند ورود کاربر، دریافت اطلاعات حساب یا انجام عملیات مربوط به شبکه اجتماعی را ارسال کند.</p>
+<p>نمای ساده این معماری به شکل زیر است:</p>
+<p><img alt="django request struct" src="../media/django-request-struct.png" /></p>
+<p>این نمودار، یک نمای مفهومی از اجزای برنامه است. مسیر دقیق اجرا به نوع عملیات بستگی دارد؛ برای مثال، عملیات خواندن ممکن است مستقیماً از Service به Selector برسد، درحالی‌که عملیات نوشتن باید تغییرات را از طریق ORM در پایگاه داده ثبت کند.<br />
+همچنین Serializer در همه Endpointها الزاماً در یک جایگاه ثابت قرار نمی‌گیرد. بعضی Serializerها برای اعتبارسنجی داده ورودی و برخی برای تبدیل داده خروجی استفاده می‌شوند.</p>
+<h3 id="url-routing"><strong><em>۲.۱. URL Routing؛ مسیریابی درخواست‌ها</em></strong></h3>
+<p>وقتی کلاینت درخواستی به سرور ارسال می‌کند، Django باید تشخیص دهد که این درخواست مربوط به کدام بخش برنامه است. این کار از طریق سیستم مسیریابی URL انجام می‌شود.<br />
+برای مثال، درخواست ورود کاربر باید به Endpoint مربوط به احراز هویت برسد؛ درحالی‌که درخواست دریافت نوشته‌ها باید به بخش مرتبط با نوشته‌ها هدایت شود. <br />
+در این پروژه، فایل‌های urls.py مسئول تعریف و اتصال مسیرهای URL به Viewهای مربوط هستند.</p>
+<h3 id="view"><strong><em>۲.۲. View؛ دریافت و پاسخ‌گویی به درخواست</em></strong></h3>
+<p>View نقطه‌ای است که درخواست وارد منطق API می‌شود.<br />
+در Django REST Framework، View می‌تواند مسئولیت‌هایی مانند موارد زیر را بر عهده داشته باشد:</p>
+<ul>
+<li>دریافت درخواست HTTP؛  </li>
+<li>بررسی احراز هویت و مجوزها؛  </li>
+<li>دریافت داده‌های ورودی؛  </li>
+<li>اجرای اعتبارسنجی لازم؛  </li>
+<li>فراخوانی منطق مورد نیاز برنامه؛  </li>
+<li>تبدیل نتیجه به پاسخ HTTP.</li>
+</ul>
+<p>برای مثال، هنگام درخواست دریافت نوشته‌ها، View باید عملیات مربوط را آغاز کند و نتیجه را در قالب پاسخ مناسب در اختیار کلاینت قرار دهد.<br />
+یکی از اصول مهم طراحی این است که View تا حد امکان از جزئیات پیچیده منطق برنامه دور نگه داشته شود. به‌جای قرار دادن تمام عملیات در یک View طولانی، می‌توان منطق کاربردی را به Service و عملیات دسترسی به داده را به Selector منتقل کرد.<br />
+این روش باعث می‌شود کد هر بخش وظیفه مشخص‌تری داشته باشد.</p>
+<h3 id="serializer"><strong><em>۲.۳. Serializer؛ اعتبارسنجی و تبدیل داده‌ها</em></strong></h3>
+<p>در Django REST Framework، Serializer یکی از اجزای مهم ارتباط API با داده‌هاست. Serializer می‌تواند داده‌های دریافتی از کلاینت را بررسی کند و در صورت معتبر بودن، آن‌ها را برای استفاده در منطق برنامه آماده سازد.<br />
+برای مثال، هنگام ثبت‌نام ممکن است لازم باشد ایمیل، رمز عبور و سایر اطلاعات ورودی بررسی شوند. اگر داده ورودی معتبر نباشد، برنامه باید خطای مناسبی به کلاینت برگرداند.<br />
+Serializer همچنین می‌تواند اشیای Django را به داده‌هایی مانند دیکشنری تبدیل کند تا در قالب JSON به کلاینت ارسال شوند.</p>
+<h3 id="service"><strong><em>۲.۴. Service؛ اجرای منطق کاربردی</em></strong></h3>
+<p>Serviceها برای سازمان‌دهی عملیات کاربردی برنامه استفاده می‌شوند.<br />
+فرض کنیم کاربر قصد دارد عملیاتی انجام دهد که به چند مرحله نیاز دارد. برای مثال، ممکن است لازم باشد اطلاعات کاربر بررسی شود، محدودیت‌های دسترسی اعمال شوند و سپس تغییر موردنظر در پایگاه داده ثبت شود.<br />
+اگر تمام این مراحل مستقیماً در View نوشته شوند، کد به‌تدریج پیچیده خواهد شد.<br />
+با استفاده از Service، می‌توان عملیات را در یک تابع یا کلاس مستقل قرار داد و View را به بخش دریافت درخواست و برگرداندن پاسخ محدودتر کرد.<br />
+در این معماری، Service نقش هماهنگ‌کننده عملیات را دارد.<br />
+البته Service جایگزین مدل یا پایگاه داده نیست؛ بلکه از آن‌ها و سایر اجزای برنامه برای انجام عملیات موردنیاز استفاده می‌کند.</p>
+<h3 id="selector"><strong><em>۲.۵. Selector؛ سازمان‌دهی عملیات خواندن اطلاعات</em></strong></h3>
+<p>Selectorها در این پروژه برای سازمان‌دهی منطق بازیابی اطلاعات به کار می‌روند.<br />
+برای مثال، برنامه ممکن است به اطلاعات پروفایل یک کاربر، نوشته‌های منتشر شده یا اطلاعات مرتبط با اشتراک‌های کاربران نیاز داشته باشد.<br />
+به‌جای تکرار QuerySet های مشابه در چند View، می‌توان منطق دسترسی به اطلاعات را در Selector های مربوط قرار داد.<br />
+این کار مزایای زیر را دارد:</p>
+<ul>
+<li>کاهش تکرار کد؛  </li>
+<li>متمرکز شدن منطق Query ها؛  </li>
+<li>ساده‌تر شدن بررسی عملکرد پرس‌وجوها؛  </li>
+<li>امکان استفاده مجدد از عملیات خواندن در بخش‌های مختلف برنامه.</li>
+</ul>
+<p>برای مثال، اگر چند بخش برنامه به نوشته‌های یک کاربر نیاز داشته باشند، یک Selector مناسب می‌تواند منطق بازیابی آن نوشته‌ها را به‌صورت مشترک ارائه کند.<br />
+البته Selectorها در این معماری مفهوم طراحی هستند و نباید آن‌ها را با قابلیت خاصی از خود Django اشتباه گرفت.</p>
+<h3 id="model"><strong><em>۲.۶. Model؛ تعریف ساختار داده‌ها</em></strong></h3>
+<p>Modelها ساختار اطلاعاتی برنامه را تعریف می‌کنند. در Django، مدل‌ها معمولاً به جدول‌های پایگاه داده نگاشت می‌شوند و فیلدها و روابط میان داده‌ها را مشخص می‌کنند.برای مثال، یک مدل کاربر می‌تواند اطلاعات حساب کاربری را نگهداری کند و یک مدل مربوط به نوشته‌ها می‌تواند اطلاعات محتوای منتشرشده را ذخیره کند و رابطه میان مدل‌ها مشخص می‌کند که موجودیت‌های مختلف چگونه به یکدیگر وابسته‌اند. در این پروژه، مدل‌ها همراه با ORM جنگو امکان انجام عملیات پایگاه داده را از طریق کد Python فراهم می‌کنند.</p>
+<h2 id="_2"><strong>۳. چرخه پردازش یک درخواست در برنامه</strong></h2>
+<p>برای درک بهتر معماری، فرض کنیم کاربر قصد دارد اطلاعات یک نوشته را از طریق API دریافت کند.<br />
+این عملیات به‌صورت مفهومی در مراحل زیر انجام می‌شود.</p>
+<h3 id="_3"><strong><em>مرحله اول: ارسال درخواست</em></strong></h3>
+<p>کلاینت یک درخواست HTTP به Endpoint مربوط ارسال می‌کند.</p>
+<h3 id="_4"><strong><em>مرحله دوم: دریافت درخواست در سرور</em></strong></h3>
+<p>در محیط استقرار، Traefik درخواست را به کانتینر Django هدایت می‌کند. سپس سرور برنامه درخواست را دریافت می‌کند.</p>
+<h3 id="django"><strong><em>مرحله سوم: مسیریابی در Django</em></strong></h3>
+<p>Django با استفاده از تنظیمات URL، درخواست را به View مربوط هدایت می‌کند.</p>
+<h3 id="_5"><strong><em>مرحله چهارم: بررسی ورودی و دسترسی</em></strong></h3>
+<p>اگر Endpoint نیاز به احراز هویت داشته باشد، اعتبار توکن بررسی می‌شود. در صورت وجود داده ورودی، اعتبارسنجی مناسب نیز انجام می‌شود.</p>
+<h3 id="_6"><strong><em>مرحله پنجم: اجرای منطق برنامه</em></strong></h3>
+<p>View، عملیات مورد نیاز را از طریق Service یا اجزای مرتبط اجرا می‌کند.</p>
+<h3 id="_7"><strong><em>مرحله ششم: بازیابی داده</em></strong></h3>
+<p>Selector با منطق مناسب دسترسی به اطلاعات را انجام می‌دهد. بسته به پیاده‌سازی، ممکن است ابتدا کش بررسی شود و در صورت نیاز، اطلاعات از PostgreSQL دریافت شوند.</p>
+<h3 id="_8"><strong><em>مرحله هفتم: آماده‌سازی پاسخ</em></strong></h3>
+<p>نتیجه عملیات به کمک Serializer به قالب قابل ارسال به کلاینت تبدیل می‌شود.</p>
+<h3 id="_9"><strong><em>مرحله هشتم: ارسال پاسخ</em></strong></h3>
+<p>Django پاسخ HTTP را تولید می‌کند و در محیط استقرار، پاسخ از طریق Traefik به کلاینت بازمی‌گردد.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Just For Fun
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/2mohsen" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/mohamadiann/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8c0-14.3 5.7-27.9 15.8-38S39.6 0 53.8 0s27.9 5.7 38 15.8 15.8 23.8 15.8 38c0 29.7-24.1 54.3-53.8 54.3M447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://2mohsen.ir/" target="_blank" rel="noopener" title="2mohsen.ir" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "\u06a9\u067e\u06cc \u0634\u062f", "clipboard.copy": "\u06a9\u067e\u06cc \u06a9\u0631\u062f\u0646", "search.result.more.one": "1 \u0645\u0648\u0631\u062f \u062f\u06cc\u06af\u0631 \u062f\u0631 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647", "search.result.more.other": "# \u0645\u0648\u0631\u062f \u062f\u06cc\u06af\u0631 \u062f\u0631 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647", "search.result.none": "\u0633\u0646\u062f\u06cc \u06cc\u0627\u0641\u062a \u0646\u0634\u062f", "search.result.one": "1 \u0633\u0646\u062f \u06cc\u0627\u0641\u062a \u0634\u062f", "search.result.other": "# \u0633\u0646\u062f \u06cc\u0627\u0641\u062a \u0634\u062f", "search.result.placeholder": "\u0628\u0631\u0627\u06cc \u0634\u0631\u0648\u0639 \u062c\u0633\u062a\u062c\u0648 \u062a\u0627\u06cc\u067e \u06a9\u0646\u06cc\u062f", "search.result.term.missing": "\u0645\u0648\u062c\u0648\u062f \u0646\u06cc\u0633\u062a", "select.version": "\u0627\u0646\u062a\u062e\u0627\u0628 \u0648\u06cc\u0631\u0627\u06cc\u0634"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
